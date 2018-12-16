@@ -1,0 +1,29 @@
+<resources>
+    <string name="app_name">VKPhotoFriends</string>
+    <string name="login_hello">Зайдите в вк для работы приложения. Для этого нажмите кнопку ниже.</string>
+    <string name="login_enter">Войти</string>
+    <string name="friends_search_hint">Начните вводить имена друзей</string>
+    <string name="friends_no_items">У вас нет друзей!</string>
+    <string name="login_error_credentials">Ошибка при попытка логина в вк</string>
+    <string name="friend_no_city">Город не указан</string>
+    <string name="friends_error_loading">Ошибка при загрузке списка друзей</string>
+    <integer name="com_vk_sdk_AppId">6778710</integer>
+    <string name="title_activity_menu">MenuActivity</string>
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+    <string name="nav_header_title">Android Studio</string>
+    <string name="nav_header_subtitle">android.studio@android.com</string>
+    <string name="nav_header_desc">Navigation header</string>
+    <string name="action_settings">Settings</string>
+    <string name="friends_list">Список друзей</string>
+    <string name="photos_list">Лента фото</string>
+    <string name="open_photos">открыть фото</string>
+    <string name="exit">Выйти</string>
+    <string name="close_photos">Закрыть фото</string>
+    <string name="photos_error_loading">Ошибка загрузки фото</string>
+    <string name="txt_only_observed_friends">Только отслеживаемые друзья (%s)</string>
+    <string name="photos_no_photos">Нет фото. Проверьте интернет и добавленных друзей!</string>
+    <string name="photo_txt_published">Опубликованно %s</string>
+    <string name="photo_txt_likes">Мне нравится %s</string>
+    <string name="photo_txt_comments">Комментариев %s</string>
+</resources>
