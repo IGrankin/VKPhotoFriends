@@ -8,9 +8,13 @@ import android.support.v7.widget.OrientationHelper
 import android.support.v7.widget.RecyclerView
 import android.text.Editable
 import android.text.TextWatcher
+import android.view.LayoutInflater
 import android.view.View
+import android.view.ViewGroup
 import android.widget.*
 import com.arellomobile.mvp.MvpAppCompatActivity
+import com.arellomobile.mvp.MvpAppCompatFragment
+import com.arellomobile.mvp.MvpFragment
 import com.arellomobile.mvp.presenter.InjectPresenter
 import com.example.igorgrankin.vkphotofriends.R
 import com.example.igorgrankin.vkphotofriends.adapters.FriendsAdapter
@@ -20,7 +24,7 @@ import com.example.igorgrankin.vkphotofriends.views.FriendsView
 import com.github.rahatarmanahmed.cpv.CircularProgressView
 import com.vk.sdk.VKSdk
 
-class FriendsActivity : MvpAppCompatActivity(), FriendsView, FriendsAdapter.OnFriendClick {
+class FriendsActivity : MvpAppCompatFragment(), FriendsView, FriendsAdapter.OnFriendClick {
     @InjectPresenter
     lateinit var friendsPresenter: FriendsPresenter
 
@@ -35,22 +39,27 @@ class FriendsActivity : MvpAppCompatActivity(), FriendsView, FriendsAdapter.OnFr
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_friends)
-        mRvFriends = findViewById(R.id.recycler_friends)
-        mTxtNoItems = findViewById(R.id.txt_friends_no_items)
-        mCpvWait = findViewById(R.id.cpv_friends)
+        retainInstance = true
+        friendsPresenter.loadFriends(activity?.applicationContext)
+    }
 
-        mPhotosButton = findViewById(R.id.btn_open_photos)
-        mPhotosButton.setOnClickListener {
-            startActivity(Intent(applicationContext, PhotosActivity::class.java))
-        }
-        mExitButton = findViewById(R.id.btn_exit)
-        mExitButton.setOnClickListener {
-            VKSdk.logout()
-            this.finish()
-        }
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+        val view = inflater.inflate(R.layout.activity_friends, container, false)
+        mRvFriends = view.findViewById(R.id.recycler_friends)
+        mTxtNoItems = view.findViewById(R.id.txt_friends_no_items)
+        mCpvWait = view.findViewById(R.id.cpv_friends)
 
-        val mTxtSearch: EditText = findViewById(R.id.txt_friends_search)
+//        mPhotosButton = view.findViewById(R.id.btn_open_photos)
+//        mPhotosButton.setOnClickListener {
+//            startActivity(Intent(activity?.applicationContext, PhotosActivity::class.java))
+//        }
+//        mExitButton = view.findViewById(R.id.btn_exit)
+//        mExitButton.setOnClickListener {
+//            VKSdk.logout()
+//            activity?.finish()
+//        }
+
+        val mTxtSearch: EditText = view.findViewById(R.id.txt_friends_search)
         mTxtSearch.addTextChangedListener(object: TextWatcher {
             override fun afterTextChanged(s: Editable?) {
 
@@ -65,7 +74,7 @@ class FriendsActivity : MvpAppCompatActivity(), FriendsView, FriendsAdapter.OnFr
 
         })
 
-        mSwitchFriends = findViewById(R.id.switch_show_added_friends)
+        mSwitchFriends = view.findViewById(R.id.switch_show_added_friends)
         mSwitchFriends.setOnCheckedChangeListener {
                 buttonView: CompoundButton?, isChecked: Boolean ->
             if (isChecked) {
@@ -75,28 +84,25 @@ class FriendsActivity : MvpAppCompatActivity(), FriendsView, FriendsAdapter.OnFr
             }
         }
 
-        mCountFriendsText = findViewById(R.id.count_friends)
+        mCountFriendsText = view.findViewById(R.id.count_friends)
 
-        friendsPresenter.loadFriends(applicationContext)
+
         mAdapter = FriendsAdapter(this)
 
         mRvFriends.adapter = mAdapter
-        mRvFriends.layoutManager = LinearLayoutManager(applicationContext, OrientationHelper.VERTICAL, false)
+        mRvFriends.layoutManager = LinearLayoutManager(activity?.applicationContext, OrientationHelper.VERTICAL, false)
         mRvFriends.setHasFixedSize(true)
-    }
-
-    override fun onBackPressed() {
-        moveTaskToBack(true)
+        return view
     }
 
     // Item view methods
     override fun onFriendClicked(itemView: View, friendModel: FriendModel) {
         val wasAdded = mAdapter.tryToAddObservedFriend(friendModel)
         if (wasAdded) {
-            friendsPresenter.saveFriend(context = applicationContext, friendModel = friendModel)
+            friendsPresenter.saveFriend(context = activity?.applicationContext, friendModel = friendModel)
             markViewAsAdded(itemView)
         } else {
-            friendsPresenter.removeFriend(context = applicationContext, friendModel = friendModel)
+            friendsPresenter.removeFriend(context = activity?.applicationContext, friendModel = friendModel)
             markViewAsRegular(itemView)
         }
     }

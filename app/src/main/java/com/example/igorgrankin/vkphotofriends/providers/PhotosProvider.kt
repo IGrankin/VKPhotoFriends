@@ -13,6 +13,11 @@ class PhotosProvider(var presenter: PhotosPresenter) {
     private val TAG: String = PhotosPresenter::class.java.simpleName
     fun loadPhotos(friendsSet: Set<String>, silentMode: Boolean) {
         var ids = friendsSet.toString()
+        if (friendsSet.count() == 0) {
+            presenter.photosLoaded(ArrayList(0))
+            presenter.showError(textResource = R.string.photos_error_loading)
+            return
+        }
         ids = ids.replace("[", "")
         ids = ids.replace("]", "")
         val request = VKRequest("newsfeed.get", VKParameters.from(
@@ -79,6 +84,6 @@ class PhotosProvider(var presenter: PhotosPresenter) {
     }
 
     fun getSavedFriends(context: Context?): Set<String> {
-        return SharedPreferencesHelper().getSavedFriends(context)
+        return SharedPreferencesHelper.getSavedFriends(context)
     }
 }

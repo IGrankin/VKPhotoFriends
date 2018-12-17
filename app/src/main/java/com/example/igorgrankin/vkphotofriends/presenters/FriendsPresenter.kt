@@ -10,9 +10,11 @@ import com.example.igorgrankin.vkphotofriends.views.FriendsView
 
 @InjectViewState
 class FriendsPresenter: MvpPresenter<FriendsView>() {
+    private val provider: FriendsProvider = FriendsProvider(presenter = this)
+
     fun loadFriends(context: Context?) {
         viewState.startLoading()
-        FriendsProvider(presenter = this).loadFriends(context)
+        provider.loadFriends(context)
     }
 
     fun friendsLoaded(
@@ -28,7 +30,7 @@ class FriendsPresenter: MvpPresenter<FriendsView>() {
             viewState.setupFriendsList(friendsList = friendsList, idsSet = addedIds)
         }
 
-        val count = FriendsProvider(presenter = this).getSavedFriends(context).count()
+        val count = provider.getSavedFriends(context).count()
         viewState.updateObservedFriendsCountWithInt(count)
     }
 
@@ -46,19 +48,19 @@ class FriendsPresenter: MvpPresenter<FriendsView>() {
     }
 
     fun saveFriend(context: Context?, friendModel: FriendModel) {
-        FriendsProvider(presenter = this).saveFriend(context, friendModel)
-        val count = FriendsProvider(presenter = this).getSavedFriends(context).count()
+        provider.saveFriend(context, friendModel)
+        val count = provider.getSavedFriends(context).count()
         viewState.updateObservedFriendsCountWithInt(count)
     }
 
     fun removeFriend(context: Context?, friendModel: FriendModel) {
-        FriendsProvider(presenter = this).removeFriend(context, friendModel)
-        val count = FriendsProvider(presenter = this).getSavedFriends(context).count()
+        provider.removeFriend(context, friendModel)
+        val count = provider.getSavedFriends(context).count()
         viewState.updateObservedFriendsCountWithInt(count)
     }
 
     fun getSavedFriends(context: Context?): Set<String> {
-        return FriendsProvider(presenter = this).getSavedFriends(context)
+        return provider.getSavedFriends(context)
     }
 
 }

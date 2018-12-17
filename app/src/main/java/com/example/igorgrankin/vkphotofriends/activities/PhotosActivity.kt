@@ -1,14 +1,18 @@
 package com.example.igorgrankin.vkphotofriends.activities
 
+import android.graphics.Color
 import android.os.Bundle
 import android.os.Handler
 import android.support.v4.widget.SwipeRefreshLayout
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.OrientationHelper
 import android.support.v7.widget.RecyclerView
+import android.view.LayoutInflater
 import android.view.View
+import android.view.ViewGroup
 import android.widget.TextView
 import com.arellomobile.mvp.MvpAppCompatActivity
+import com.arellomobile.mvp.MvpAppCompatFragment
 import com.arellomobile.mvp.presenter.InjectPresenter
 import com.example.igorgrankin.vkphotofriends.R
 import com.example.igorgrankin.vkphotofriends.adapters.PhotosAdapter
@@ -17,7 +21,7 @@ import com.example.igorgrankin.vkphotofriends.presenters.PhotosPresenter
 import com.example.igorgrankin.vkphotofriends.views.PhotosView
 import com.github.rahatarmanahmed.cpv.CircularProgressView
 
-class PhotosActivity : MvpAppCompatActivity(), PhotosView {
+class PhotosActivity : MvpAppCompatFragment(), PhotosView {
 
     @InjectPresenter
     lateinit var photosPresenter: PhotosPresenter
@@ -32,23 +36,25 @@ class PhotosActivity : MvpAppCompatActivity(), PhotosView {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        retainInstance = true
+    }
 
-        setContentView(R.layout.activity_photos)
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
 
-        mRvPhotos = findViewById(R.id.recycler_photos)
-        mTxtNoItems = findViewById(R.id.txt_photos_no_photos)
-        mCpvWait = findViewById(R.id.cpv_photos)
-        photosPresenter.loadPhotos(applicationContext)
-        mSwipeContainer = findViewById(R.id.photo_swipe_container)
-
+        val view = inflater.inflate(R.layout.activity_photos, container, false)
+        mRvPhotos = view.findViewById(R.id.recycler_photos)
+        mTxtNoItems = view.findViewById(R.id.txt_photos_no_photos)
+        mCpvWait = view.findViewById(R.id.cpv_photos)
+        mSwipeContainer = view.findViewById(R.id.photo_swipe_container)
+        photosPresenter.loadPhotos(activity?.applicationContext)
         mSwipeContainer.setOnRefreshListener {
-            photosPresenter.loadPhotos(applicationContext)
+            photosPresenter.loadPhotos(activity?.applicationContext)
         }
         handler = Handler()
         runnable = Runnable {
             kotlin.run {
                 handler.postDelayed(runnable, 4000)
-                photosPresenter.silentLoadPhotos(applicationContext)
+                photosPresenter.silentLoadPhotos(activity?.applicationContext)
             }
         }
 
@@ -57,8 +63,9 @@ class PhotosActivity : MvpAppCompatActivity(), PhotosView {
 
         mAdapter = PhotosAdapter()
         mRvPhotos.adapter = mAdapter
-        mRvPhotos.layoutManager = LinearLayoutManager(applicationContext, OrientationHelper.VERTICAL, false)
+        mRvPhotos.layoutManager = LinearLayoutManager(activity?.applicationContext, OrientationHelper.VERTICAL, false)
         mRvPhotos.setHasFixedSize(true)
+        return view
     }
 
 

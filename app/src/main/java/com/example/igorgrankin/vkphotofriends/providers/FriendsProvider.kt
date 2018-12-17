@@ -48,15 +48,15 @@ class FriendsProvider(var presenter: FriendsPresenter) {
     }
 
     fun saveFriend(context: Context?, friendModel: FriendModel) {
-        SharedPreferencesHelper().saveFriend(context, friendModel)
+        SharedPreferencesHelper.saveFriend(context, friendModel)
     }
 
     fun removeFriend(context: Context?, friendModel: FriendModel) {
-        SharedPreferencesHelper().removeFriend(context, friendModel)
+        SharedPreferencesHelper.removeFriend(context, friendModel)
     }
 
     fun getSavedFriends(context: Context?): Set<String> {
-        return SharedPreferencesHelper().getSavedFriends(context)
+        return SharedPreferencesHelper.getSavedFriends(context)
     }
 
 }

@@ -26,4 +26,5 @@
     <string name="photo_txt_published">Опубликованно %s</string>
     <string name="photo_txt_likes">Мне нравится %s</string>
     <string name="photo_txt_comments">Комментариев %s</string>
+    <string name="vk_exit">Выйти</string>
 </resources>

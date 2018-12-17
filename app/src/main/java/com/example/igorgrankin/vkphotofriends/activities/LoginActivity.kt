@@ -56,11 +56,7 @@ class LoginActivity : MvpAppCompatActivity(), LoginView {
             override fun onError(error: VKError?) {
                 //nothing to do
             }
-
         })
-
-//        val fingerprints = VKUtil.getCertificateFingerprint(this, this.packageName)
-//        Log.e(TAG, "fingerprint ${fingerprints[0]}")
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
@@ -85,6 +81,6 @@ class LoginActivity : MvpAppCompatActivity(), LoginView {
     }
 
     override fun openFriends() {
-        startActivity(Intent(applicationContext, FriendsActivity::class.java))
+        startActivity(Intent(applicationContext, MenuActivity::class.java))
     }
 }

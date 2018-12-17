@@ -10,9 +10,10 @@ import com.example.igorgrankin.vkphotofriends.views.PhotosView
 
 @InjectViewState
 class PhotosPresenter: MvpPresenter<PhotosView>() {
+    private val provider: PhotosProvider = PhotosProvider(presenter = this)
     fun loadPhotos(context: Context?) {
         viewState.startLoading()
-        var provider = PhotosProvider(presenter = this)
+        var provider = provider
         var savedFriends = provider.getSavedFriends(context)
         provider.loadPhotos(savedFriends, false)
     }
@@ -32,7 +33,7 @@ class PhotosPresenter: MvpPresenter<PhotosView>() {
     }
 
     fun silentLoadPhotos(context: Context?) {
-        var provider = PhotosProvider(presenter = this)
+        var provider = provider
         var savedFriends = provider.getSavedFriends(context)
         provider.loadPhotos(savedFriends, true)
     }
