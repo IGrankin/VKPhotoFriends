@@ -1,6 +1,8 @@
 package com.example.igorgrankin.vkphotofriends.activities
 
 import android.os.Bundle
+import android.os.Handler
+import android.support.v4.widget.SwipeRefreshLayout
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.OrientationHelper
 import android.support.v7.widget.RecyclerView
@@ -24,6 +26,9 @@ class PhotosActivity : MvpAppCompatActivity(), PhotosView {
     private lateinit var mTxtNoItems: TextView
     private lateinit var mCpvWait: CircularProgressView
     private lateinit var mAdapter: PhotosAdapter
+    private lateinit var mSwipeContainer: SwipeRefreshLayout
+    private lateinit var handler: Handler
+    private lateinit var runnable: Runnable
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -34,6 +39,21 @@ class PhotosActivity : MvpAppCompatActivity(), PhotosView {
         mTxtNoItems = findViewById(R.id.txt_photos_no_photos)
         mCpvWait = findViewById(R.id.cpv_photos)
         photosPresenter.loadPhotos(applicationContext)
+        mSwipeContainer = findViewById(R.id.photo_swipe_container)
+
+        mSwipeContainer.setOnRefreshListener {
+            photosPresenter.loadPhotos(applicationContext)
+        }
+        handler = Handler()
+        runnable = Runnable {
+            kotlin.run {
+                handler.postDelayed(runnable, 4000)
+                photosPresenter.silentLoadPhotos(applicationContext)
+            }
+        }
+
+        handler.postDelayed(runnable, 4000)
+
 
         mAdapter = PhotosAdapter()
         mRvPhotos.adapter = mAdapter
@@ -55,6 +75,7 @@ class PhotosActivity : MvpAppCompatActivity(), PhotosView {
     override fun setupPhotosList(photosList: ArrayList<PhotoModel>) {
         mRvPhotos.visibility = View.VISIBLE
         mTxtNoItems.visibility = View.GONE
+        mSwipeContainer.isRefreshing = false
         mAdapter.setupPhotos(photosList = photosList)
     }
 
@@ -66,5 +87,10 @@ class PhotosActivity : MvpAppCompatActivity(), PhotosView {
 
     override fun endLoading() {
         mCpvWait.visibility = View.GONE
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        handler.removeCallbacksAndMessages(null)
     }
 }

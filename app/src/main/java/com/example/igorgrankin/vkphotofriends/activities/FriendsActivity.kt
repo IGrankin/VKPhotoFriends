@@ -21,7 +21,6 @@ import com.github.rahatarmanahmed.cpv.CircularProgressView
 import com.vk.sdk.VKSdk
 
 class FriendsActivity : MvpAppCompatActivity(), FriendsView, FriendsAdapter.OnFriendClick {
-
     @InjectPresenter
     lateinit var friendsPresenter: FriendsPresenter
 
@@ -32,6 +31,7 @@ class FriendsActivity : MvpAppCompatActivity(), FriendsView, FriendsAdapter.OnFr
     private lateinit var mPhotosButton: Button
     private lateinit var mExitButton: Button
     private lateinit var mSwitchFriends: Switch
+    private lateinit var mCountFriendsText: TextView
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -75,6 +75,8 @@ class FriendsActivity : MvpAppCompatActivity(), FriendsView, FriendsAdapter.OnFr
             }
         }
 
+        mCountFriendsText = findViewById(R.id.count_friends)
+
         friendsPresenter.loadFriends(applicationContext)
         mAdapter = FriendsAdapter(this)
 
@@ -113,6 +115,10 @@ class FriendsActivity : MvpAppCompatActivity(), FriendsView, FriendsAdapter.OnFr
 
     override fun markViewAsRegular(itemView: View) {
         itemView.setBackgroundColor(Color.WHITE)
+    }
+
+    override fun updateObservedFriendsCountWithInt(count: Int) {
+        mCountFriendsText.text = getString(R.string.txt_only_observed_friends, count.toString())
     }
 
     // Friends View implementation

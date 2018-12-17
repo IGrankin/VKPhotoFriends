@@ -16,5 +16,6 @@ interface FriendsView: MvpView {
     fun startLoading()
     fun endLoading()
     fun showObservedFriends()
+    fun updateObservedFriendsCountWithInt(count: Int)
     fun showRegularFriends()
 }

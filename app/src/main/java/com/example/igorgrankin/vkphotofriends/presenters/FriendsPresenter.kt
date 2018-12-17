@@ -27,6 +27,9 @@ class FriendsPresenter: MvpPresenter<FriendsView>() {
             val addedIds = getSavedFriends(context)
             viewState.setupFriendsList(friendsList = friendsList, idsSet = addedIds)
         }
+
+        val count = FriendsProvider(presenter = this).getSavedFriends(context).count()
+        viewState.updateObservedFriendsCountWithInt(count)
     }
 
     fun showError(textResource: Int) {
@@ -44,10 +47,14 @@ class FriendsPresenter: MvpPresenter<FriendsView>() {
 
     fun saveFriend(context: Context?, friendModel: FriendModel) {
         FriendsProvider(presenter = this).saveFriend(context, friendModel)
+        val count = FriendsProvider(presenter = this).getSavedFriends(context).count()
+        viewState.updateObservedFriendsCountWithInt(count)
     }
 
     fun removeFriend(context: Context?, friendModel: FriendModel) {
         FriendsProvider(presenter = this).removeFriend(context, friendModel)
+        val count = FriendsProvider(presenter = this).getSavedFriends(context).count()
+        viewState.updateObservedFriendsCountWithInt(count)
     }
 
     fun getSavedFriends(context: Context?): Set<String> {

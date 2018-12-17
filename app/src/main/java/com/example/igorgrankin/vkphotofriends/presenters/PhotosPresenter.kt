@@ -12,9 +12,9 @@ import com.example.igorgrankin.vkphotofriends.views.PhotosView
 class PhotosPresenter: MvpPresenter<PhotosView>() {
     fun loadPhotos(context: Context?) {
         viewState.startLoading()
-        var provdier = PhotosProvider(presenter = this)
-        var savedFriends = provdier.getSavedFriends(context)
-        provdier.loadPhotos(savedFriends)
+        var provider = PhotosProvider(presenter = this)
+        var savedFriends = provider.getSavedFriends(context)
+        provider.loadPhotos(savedFriends, false)
     }
 
     fun photosLoaded(photosList: ArrayList<PhotoModel>) {
@@ -29,6 +29,18 @@ class PhotosPresenter: MvpPresenter<PhotosView>() {
 
     fun showError(textResource: Int) {
         viewState.showError(textResource = textResource)
+    }
+
+    fun silentLoadPhotos(context: Context?) {
+        var provider = PhotosProvider(presenter = this)
+        var savedFriends = provider.getSavedFriends(context)
+        provider.loadPhotos(savedFriends, true)
+    }
+
+    fun silentPhotosLoaded(photosList: ArrayList<PhotoModel>) {
+        if (photosList.size != 0) {
+            viewState.setupPhotosList(photosList = photosList)
+        }
     }
 
 }
